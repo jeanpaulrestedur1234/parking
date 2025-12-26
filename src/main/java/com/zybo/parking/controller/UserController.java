@@ -1,6 +1,7 @@
 package com.zybo.parking.controller;
 
 import com.zybo.parking.dto.UserDTO;
+import com.zybo.parking.dto.UserRequest;
 import com.zybo.parking.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +20,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new user")
-    public UserDTO createUser(@Valid @RequestBody UserDTO userDTO) {
+    public UserDTO createUser(@Valid @RequestBody UserRequest userDTO) {
         return userService.createUser(userDTO);
     }
 
@@ -31,7 +32,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing user")
-    public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+    public UserDTO updateUser(@PathVariable Long id, @Valid @RequestBody UserRequest userDTO) {
         return userService.updateUser(id, userDTO);
     }
 

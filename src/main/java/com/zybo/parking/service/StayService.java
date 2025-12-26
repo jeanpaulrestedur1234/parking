@@ -27,6 +27,7 @@ public class StayService {
 
     private static final int RATE_PER_MINUTE = 100;
 
+    @SuppressWarnings("null")
     @Transactional
     public StayDTO checkIn(CheckInRequest request) {
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
@@ -48,6 +49,7 @@ public class StayService {
 
     @Transactional
     public StayDTO checkOut(Long stayId) {
+        @SuppressWarnings("null")
         Stay stay = stayRepository.findById(stayId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stay not found"));
 
@@ -69,8 +71,8 @@ public class StayService {
         // Register Outbox Event
         String payload = String.format(
                 "{\"stayId\": %d, \"vehicleId\": %d, \"amountCharged\": %d, \"exitTime\": \"%s\"}",
-                savedStay.getId(), savedStay.getVehicle().getId(), savedStay.getAmountCharged(), savedStay.getExitTime()
-        );
+                savedStay.getId(), savedStay.getVehicle().getId(), savedStay.getAmountCharged(),
+                savedStay.getExitTime());
         outboxService.saveEvent("STAY_CLOSED", payload);
 
         return stayMapper.toDto(savedStay);

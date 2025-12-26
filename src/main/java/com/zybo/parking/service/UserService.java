@@ -1,6 +1,7 @@
 package com.zybo.parking.service;
 
 import com.zybo.parking.dto.UserDTO;
+import com.zybo.parking.dto.UserRequest;
 import com.zybo.parking.entity.User;
 import com.zybo.parking.exception.ConflictException;
 import com.zybo.parking.exception.ResourceNotFoundException;
@@ -17,15 +18,15 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserDTO createUser(UserDTO userDTO) {
-        userRepository.findByDocument(userDTO.getDocument()).ifPresent(u -> {
+    public UserDTO createUser(UserRequest userRequest) {
+        userRepository.findByDocument(userRequest.getDocument()).ifPresent(u -> {
             throw new ConflictException("Document already exists");
         });
-        userRepository.findByPhone(userDTO.getPhone()).ifPresent(u -> {
+        userRepository.findByPhone(userRequest.getPhone()).ifPresent(u -> {
             throw new ConflictException("Phone already exists");
         });
-        
-        User user = userMapper.toEntity(userDTO);
+
+        User user = userMapper.toEntity(userRequest);
         return userMapper.toDto(userRepository.save(user));
     }
 
@@ -36,23 +37,25 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
-        userRepository.findByDocument(userDTO.getDocument())
+
+        userRepository.findByDocument(userRequest.getDocument())
                 .ifPresent(u -> {
-                    if (!u.getId().equals(id)) throw new ConflictException("Document already exists");
+                    if (!u.getId().equals(id))
+                        throw new ConflictException("Document already exists");
                 });
-        userRepository.findByPhone(userDTO.getPhone())
+        userRepository.findByPhone(userRequest.getPhone())
                 .ifPresent(u -> {
-                    if (!u.getId().equals(id)) throw new ConflictException("Phone already exists");
+                    if (!u.getId().equals(id))
+                        throw new ConflictException("Phone already exists");
                 });
 
-        user.setName(userDTO.getName());
-        user.setDocument(userDTO.getDocument());
-        user.setPhone(userDTO.getPhone());
-        
+        user.setName(userRequest.getName());
+        user.setDocument(userRequest.getDocument());
+        user.setPhone(userRequest.getPhone());
+
         return userMapper.toDto(userRepository.save(user));
     }
 

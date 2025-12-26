@@ -1,6 +1,7 @@
 package com.zybo.parking.service;
 
 import com.zybo.parking.dto.VehicleDTO;
+import com.zybo.parking.dto.VehicleRequest;
 import com.zybo.parking.entity.User;
 import com.zybo.parking.entity.Vehicle;
 import com.zybo.parking.exception.ConflictException;
@@ -20,14 +21,14 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
 
     @Transactional
-    public VehicleDTO createVehicle(VehicleDTO vehicleDTO) {
+    public VehicleDTO createVehicle(VehicleRequest vehicleDTO) {
         vehicleRepository.findByPlate(vehicleDTO.getPlate()).ifPresent(v -> {
             throw new ConflictException("Plate already exists");
         });
-        
+
         User user = userRepository.findById(vehicleDTO.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
+
         Vehicle vehicle = vehicleMapper.toEntity(vehicleDTO);
         vehicle.setUser(user);
         return vehicleMapper.toDto(vehicleRepository.save(vehicle));
@@ -40,13 +41,14 @@ public class VehicleService {
     }
 
     @Transactional
-    public VehicleDTO updateVehicle(Long id, VehicleDTO vehicleDTO) {
+    public VehicleDTO updateVehicle(Long id, VehicleRequest vehicleDTO) {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-        
+
         vehicleRepository.findByPlate(vehicleDTO.getPlate())
                 .ifPresent(v -> {
-                    if (!v.getId().equals(id)) throw new ConflictException("Plate already exists");
+                    if (!v.getId().equals(id))
+                        throw new ConflictException("Plate already exists");
                 });
 
         User user = userRepository.findById(vehicleDTO.getUserId())
@@ -54,7 +56,7 @@ public class VehicleService {
 
         vehicle.setPlate(vehicleDTO.getPlate());
         vehicle.setUser(user);
-        
+
         return vehicleMapper.toDto(vehicleRepository.save(vehicle));
     }
 

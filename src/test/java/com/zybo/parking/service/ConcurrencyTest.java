@@ -37,6 +37,7 @@ public class ConcurrencyTest {
 
     private Long vehicleId;
 
+    @SuppressWarnings("null")
     @BeforeEach
     void setUp() {
         stayRepository.deleteAll();

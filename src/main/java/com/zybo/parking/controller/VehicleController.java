@@ -1,6 +1,7 @@
 package com.zybo.parking.controller;
 
 import com.zybo.parking.dto.VehicleDTO;
+import com.zybo.parking.dto.VehicleRequest;
 import com.zybo.parking.service.VehicleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +20,7 @@ public class VehicleController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new vehicle")
-    public VehicleDTO createVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
+    public VehicleDTO createVehicle(@Valid @RequestBody VehicleRequest vehicleDTO) {
         return vehicleService.createVehicle(vehicleDTO);
     }
 
@@ -31,7 +32,7 @@ public class VehicleController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing vehicle")
-    public VehicleDTO updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleDTO vehicleDTO) {
+    public VehicleDTO updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequest vehicleDTO) {
         return vehicleService.updateVehicle(id, vehicleDTO);
     }
 

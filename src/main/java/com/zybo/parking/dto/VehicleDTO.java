@@ -1,20 +1,13 @@
 package com.zybo.parking.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class VehicleDTO {
+@SuperBuilder
+public class VehicleDTO extends VehicleRequest {
     private Long id;
-    
-    @NotBlank(message = "Plate is required")
-    private String plate;
-    
-    @NotNull(message = "UserId is required")
-    private Long userId;
 }
