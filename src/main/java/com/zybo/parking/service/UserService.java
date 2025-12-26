@@ -17,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @SuppressWarnings("null")
     @Transactional
     public UserDTO createUser(UserRequest userRequest) {
         userRepository.findByDocument(userRequest.getDocument()).ifPresent(u -> {
@@ -30,12 +31,14 @@ public class UserService {
         return userMapper.toDto(userRepository.save(user));
     }
 
+    @SuppressWarnings("null")
     public UserDTO getUser(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public UserDTO updateUser(Long id, UserRequest userRequest) {
         User user = userRepository.findById(id)
